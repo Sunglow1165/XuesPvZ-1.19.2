@@ -1,0 +1,12 @@
+modLoader="javafml" #mandatory
+loaderVersion="[43,)" #mandatory
+license="All rights reserved"
+[[mods]] #mandatory
+modId="xuespvz" #mandatory
+version="${file.jarVersion}" #mandatory
+displayName="Xue's PvZ" #mandatory
+authors="Xue" #optional
+
+description='''
+这是一个铅模组，增加了关于铅的一系列的东西，版本是1.19.2
+'''
