@@ -1,46 +1,40 @@
-
-Source installation information for modders
+Modders的源代码安装信息
 -------------------------------------------
-This code follows the Minecraft Forge installation methodology. It will apply
-some small patches to the vanilla MCP source code, giving you and it access 
-to some of the data and functions you need to build a successful mod.
+这份代码遵循Minecraft Forge的安装方法。它将对原始MCP源代码应用一些小补丁，以便您和它可以访问构建成功所需的一些数据和函数。
 
-Note also that the patches are built against "un-renamed" MCP source code (aka
-SRG Names) - this means that you will not be able to read them directly against
-normal code.
+请注意，这些补丁是针对“未重命名”的MCP源代码（即SRG名称）构建的-这意味着您将无法直接针对普通代码读取它们。
 
-Setup Process:
+设置过程:
 ==============================
+步骤1：打开命令行并浏览到您提取zip文件的文件夹。
 
-Step 1: Open your command-line and browse to the folder where you extracted the zip file.
+步骤2：你需要做出选择。
+如果您喜欢使用Eclipse：
+运行以下命令：gradlew genEclipseRuns (./gradlew genEclipseRuns如果您在Mac / Linux上)
+打开Eclipse，导入>现有的Gradle项目>选择文件夹或运行gradlew eclipse生成项目。
 
-Step 2: You're left with a choice.
-If you prefer to use Eclipse:
-1. Run the following command: `gradlew genEclipseRuns` (`./gradlew genEclipseRuns` if you are on Mac/Linux)
-2. Open Eclipse, Import > Existing Gradle Project > Select Folder 
-   or run `gradlew eclipse` to generate the project.
+如果您喜欢使用IntelliJ：
+打开IDEA，并导入项目。
+选择您的build.gradle文件并导入它。
+运行以下命令：gradlew genIntellijRuns (./gradlew genIntellijRuns如果您在Mac / Linux上)
+如果需要，在IDEA中刷新Gradle项目。
+如果在任何时候您在IDE中缺少库，或者遇到问题，您可以运行gradlew --refresh-dependencies以刷新本地缓存。gradlew clean以重置所有内容（不影响您的代码），然后重新开始过程。
 
-If you prefer to use IntelliJ:
-1. Open IDEA, and import project.
-2. Select your build.gradle file and have it import.
-3. Run the following command: `gradlew genIntellijRuns` (`./gradlew genIntellijRuns` if you are on Mac/Linux)
-4. Refresh the Gradle Project in IDEA if required.
-
-If at any point you are missing libraries in your IDE, or you've run into problems you can 
-run `gradlew --refresh-dependencies` to refresh the local cache. `gradlew clean` to reset everything 
-{this does not affect your code} and then start the process again.
-
-Mapping Names:
+映射名称:
 =============================
-By default, the MDK is configured to use the official mapping names from Mojang for methods and fields 
-in the Minecraft codebase. These names are covered by a specific license. All modders should be aware of this
-license, if you do not agree with it you can change your mapping names to other crowdsourced names in your 
-build.gradle. For the latest license text, refer to the mapping file itself, or the reference copy here:
+默认情况下，MDK配置为使用Mojang为Minecraft代码库中的方法和字段提供的官方映射名称。这些名称受特定许可证的保护。所有modders都应该知道这个许可证，如果您不同意，可以在build.gradle中将您的映射名称更改为其他集体智慧名称。有关最新的许可证文本，请参阅映射文件本身，或者参考此处的参考副本：
 https://github.com/MinecraftForge/MCPConfig/blob/master/Mojang.md
 
-Additional Resources: 
-=========================
-Community Documentation: https://mcforge.readthedocs.io/en/latest/gettingstarted/  
-LexManos' Install Video: https://www.youtube.com/watch?v=8VEdtQLuLO0  
-Forge Forum: https://forums.minecraftforge.net/  
-Forge Discord: https://discord.gg/UvedJ9m  
+其他资源：
+=============================
+社区文档：https://mcforge.readthedocs.io/en/latest/gettingstarted/
+LexManos的安装视频：https://www.youtube.com/watch?v=8VEdtQLuLO0
+Forge论坛：https://forums.minecraftforge.net/
+Forge Discord：https://discord.gg/UvedJ9m
+
+GitHub push 失败的命令：
+=============================
+git config --global http.sslVerify "false"
+
+git config --global --unset http.proxy
+git config --global --unset https.proxy
