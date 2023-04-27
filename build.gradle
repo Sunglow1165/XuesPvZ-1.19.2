@@ -1,129 +1,68 @@
+// 插件
 plugins {
-    id 'eclipse'
-    id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '5.1.+'
+    id "architectury-plugin" version "3.4-SNAPSHOT"
+    id "dev.architectury.loom" version "0.12.0-SNAPSHOT" apply false
 }
 
-version = '0.0.1'
-group = 'com.xue.xuespvz'
-archivesBaseName = 'xuespvz'
+apply plugin: "java"
+apply plugin: "maven-publish"
+apply plugin: "architectury-plugin"
+apply plugin: "dev.architectury.loom"
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+// 项目配置
+archivesBaseName = rootProject.archives_base_name
+version = rootProject.mod_version
+group = rootProject.maven_group
 
-println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
-minecraft {
-
-    mappings channel: 'official', version: '1.19.2'
-
-    runs {
-        client {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-
-
-            property 'forge.logging.console.level', 'debug'
-
-
-            property 'forge.enabledGameTestNamespaces', 'examplemod'
-
-            mods {
-                examplemod {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        server {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            property 'forge.logging.console.level', 'debug'
-
-            property 'forge.enabledGameTestNamespaces', 'examplemod'
-
-            mods {
-                examplemod {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        gameTestServer {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            property 'forge.logging.console.level', 'debug'
-
-            property 'forge.enabledGameTestNamespaces', 'examplemod'
-
-            mods {
-                examplemod {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        data {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            property 'forge.logging.console.level', 'debug'
-
-            args '--mod', 'examplemod', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-
-            mods {
-                examplemod {
-                    source sourceSets.main
-                }
-            }
-        }
-    }
+// Architectury插件的配置
+architectury {
+    minecraft = rootProject.minecraft_version
+    common(rootProject.enabled_platforms.split(","))
+    platformSetupLoomIde()
+    forge()
 }
 
-sourceSets.main.resources { srcDir 'src/generated/resources' }
-
-repositories {
-
+// Loom插件的配置
+loom {
+    accessWidenerPath = file("src/main/resources/creeperoverhaul.accesswidener")
+    silentMojangMappingsLicense()
 }
 
+// 依赖
 dependencies {
-
-    minecraft 'net.minecraftforge:forge:1.19.2-43.2.0'
+    forge "net.minecraftforge:forge:${rootProject.forge_version}"
+    minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+    modApi "com.teamresourceful.resourcefulconfig:resourcefulconfig-forge-$rootProject.minecraft_version:$rootProject.resourcefulconfig_version"
+    mappings loom.officialMojangMappings()
 }
 
-jar {
-    manifest {
-        attributes([
-                "Specification-Title"     : "examplemod",
-                "Specification-Vendor"    : "examplemodsareus",
-                "Specification-Version"   : "1", // We are version 1 of ourselves
-                "Implementation-Title"    : project.name,
-                "Implementation-Version"  : project.jar.archiveVersion,
-                "Implementation-Vendor"   : "examplemodsareus",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
+// 依赖远程仓库
+repositories {
+    maven { url 'https://maven.aliyun.com/repository/public' }
+    maven { url = "https://nexus.resourcefulbees.com/repository/maven-public/" }
+    maven { url "https://maven.terraformersmc.com" }
 }
 
-jar.finalizedBy('reobfJar')
-
+// 项目发布的配置
 publishing {
     publications {
-        mavenJava(MavenPublication) {
-            artifact jar
+        mavenForge(MavenPublication) {
+            artifactId = rootProject.archives_base_name + "-" + project.name
+            from components.java
         }
     }
+
     repositories {
-        maven {
-            url "file://${project.projectDir}/mcmodsrepo"
-        }
     }
 }
 
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8'
+// 针对所有的Java编译任务（JavaCompile）进行配置
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+    options.release.set(17)
+}
+
+// 表示在生成Jar文件的同时，还会生成带有源代码的Jar文件，这通常用于开源项目的发布
+java {
+    withSourcesJar()
 }
